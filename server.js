@@ -12,6 +12,7 @@ app.set('view engine', 'ejs')
 app.set('views', __dirname + '/views')
 app.set('layout', 'layouts/layout')
 app.use(expressLayouts)
+app.use(express.json());
 app.use(express.static('public'))
 app.use(logger)
 
@@ -24,9 +25,14 @@ db.once('open', () => console.log('Connected to Mongoose'))
 
 app.use('/', indexRouter)
 
+const authRouter = require('./routes/auth')
+const ratesRouter = require('./routes/rates')
+// userRoute is not fully implemented
 const userRouter = require('./routes/users')
 
-app.use('/users', userRouter)
+app.use('/v1/auth', authRouter)
+app.use('/v1/users', userRouter)
+app.use('/v1/rates', ratesRouter)
 
 function logger(req, res, next) {
     console.log(req.originalUrl)
